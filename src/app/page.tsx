@@ -1,100 +1,140 @@
-import Image from "next/image";
+'use client';
+
+import React, { useState } from 'react';
+import { Navbar } from '@/components/Navbar';
+import { PersonalizedExperience } from '@/components/PersonalizedExperience';
+import { OperatorOperations } from '@/components/OperatorOperations';
+import { AnalyticsDashboard } from '@/components/AnalyticsDashboard';
+import { QueryConsole } from '@/components/QueryConsole';
+import { UserRole, DEMO_USERS } from '@/lib/auth';
+import { Database, CheckCircle2, Compass } from 'lucide-react';
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const [currentRole, setCurrentRole] = useState<UserRole>('VISITOR');
+  const [activeTab, setActiveTab] = useState<string>('experience');
+  const [userWallet, setUserWallet] = useState<number>(450.00);
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  const handleSelectRole = (role: UserRole) => {
+    setCurrentRole(role);
+    setUserWallet(DEMO_USERS[role].walletBalance);
+
+    // Auto-switch tabs to relevant role view for smooth user flow
+    if (role === 'OPERATOR') {
+      setActiveTab('operations');
+    } else if (role === 'ADMIN') {
+      setActiveTab('analytics');
+    } else {
+      setActiveTab('experience');
+    }
+  };
+
+  const handleRefreshWallet = () => {
+    setUserWallet((prev) => Math.max(0, prev - 119.99));
+  };
+
+  return (
+    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans selection:bg-indigo-500 selection:text-white">
+      {/* Top Navigation */}
+      <Navbar
+        currentRole={currentRole}
+        onSelectRole={handleSelectRole}
+        activeTab={activeTab}
+        onSelectTab={setActiveTab}
+      />
+
+      {/* Main App Workspace */}
+      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        {/* Quick Multi-Paradigm Architecture Callout Banner */}
+        <div className="mb-8 p-4 rounded-2xl bg-gradient-to-r from-slate-900 via-indigo-950/40 to-slate-900 border border-slate-800 flex flex-wrap items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-lg bg-indigo-500/20 text-indigo-400 flex items-center justify-center border border-indigo-500/30">
+              <Database className="w-4 h-4" />
+            </div>
+            <div>
+              <div className="text-xs font-bold text-white flex items-center gap-2">
+                <span>DBMS Level 3 Multi-Paradigm Architecture Active:</span>
+                <span className="hidden sm:inline-flex items-center gap-1 text-[11px] font-mono text-emerald-400 bg-emerald-950/60 px-2 py-0.5 rounded border border-emerald-800">
+                  <CheckCircle2 className="w-3 h-3" /> Relational (SQL)
+                </span>
+                <span className="hidden sm:inline-flex items-center gap-1 text-[11px] font-mono text-amber-400 bg-amber-950/60 px-2 py-0.5 rounded border border-amber-800">
+                  <CheckCircle2 className="w-3 h-3" /> NoSQL (MongoDB)
+                </span>
+                <span className="hidden sm:inline-flex items-center gap-1 text-[11px] font-mono text-purple-400 bg-purple-950/60 px-2 py-0.5 rounded border border-purple-800">
+                  <CheckCircle2 className="w-3 h-3" /> Vector (pgvector)
+                </span>
+              </div>
+              <div className="text-[11px] text-slate-400 mt-0.5">
+                Current active view: <strong className="text-white">{DEMO_USERS[currentRole].fullName}</strong> ({currentRole})
+              </div>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <span className="text-[11px] font-semibold text-slate-400">Quick View:</span>
+            <button
+              onClick={() => handleSelectRole('VISITOR')}
+              className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all ${
+                currentRole === 'VISITOR' ? 'bg-indigo-600 text-white' : 'bg-slate-800 text-slate-400 hover:text-white'
+              }`}
+            >
+              Visitor
+            </button>
+            <button
+              onClick={() => handleSelectRole('OPERATOR')}
+              className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all ${
+                currentRole === 'OPERATOR' ? 'bg-amber-600 text-white' : 'bg-slate-800 text-slate-400 hover:text-white'
+              }`}
+            >
+              Staff
+            </button>
+            <button
+              onClick={() => handleSelectRole('ADMIN')}
+              className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all ${
+                currentRole === 'ADMIN' ? 'bg-emerald-600 text-white' : 'bg-slate-800 text-slate-400 hover:text-white'
+              }`}
+            >
+              Admin
+            </button>
+          </div>
         </div>
+
+        {/* Tab Content Display */}
+        {activeTab === 'experience' && (
+          <PersonalizedExperience
+            currentRole={currentRole}
+            userWallet={userWallet}
+            onRefreshWallet={handleRefreshWallet}
+          />
+        )}
+
+        {activeTab === 'operations' && (
+          <OperatorOperations
+            currentRole={currentRole}
+          />
+        )}
+
+        {activeTab === 'analytics' && (
+          <AnalyticsDashboard />
+        )}
+
+        {activeTab === 'queries' && (
+          <QueryConsole />
+        )}
+
       </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
+
+      {/* Footer */}
+      <footer className="mt-16 border-t border-slate-900 bg-slate-950/80 py-8 text-center text-xs text-slate-500">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="flex items-center gap-2">
+            <Compass className="w-4 h-4 text-indigo-400" />
+            <span className="font-extrabold text-slate-300">Smart Theme Park Operations & Personalized Visitor Experience</span>
+          </div>
+          <div>
+            DBMS Experiential Learning - Level 3 Project | PostgreSQL + pgvector + MongoDB + Next.js
+          </div>
+        </div>
       </footer>
     </div>
   );
