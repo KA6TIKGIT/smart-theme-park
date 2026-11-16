@@ -14,8 +14,8 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Smart Theme Park Operations & Personalized Visitor Experience",
-  description: "DBMS Experiential Learning - Level 3 Multi-Paradigm Database System (PostgreSQL + pgvector + MongoDB + Next.js)",
+  title: "✨ Aetheria Wonderland | Theme Park Experience & Smart Operations",
+  description: "Step into Aetheria Wonderland! Discover magical coasters, live queue times, AI mood matching, FastPass bookings, and ride telemetry.",
 };
 
 export default function RootLayout({
@@ -26,7 +26,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-slate-950 text-slate-100 min-h-screen`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-[#0b0f19] text-slate-100 min-h-screen selection:bg-pink-500 selection:text-white`}
       >
         {children}
       </body>

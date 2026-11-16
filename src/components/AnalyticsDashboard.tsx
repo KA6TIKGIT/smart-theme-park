@@ -1,7 +1,20 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { DollarSign, Users, Award, TrendingUp, RefreshCw, BarChart3, Database, Layers } from 'lucide-react';
+import { 
+  DollarSign, 
+  Users, 
+  Award, 
+  TrendingUp, 
+  RefreshCw, 
+  BarChart3, 
+  Database, 
+  Layers,
+  Crown,
+  Sparkles,
+  Zap,
+  Star
+} from 'lucide-react';
 
 export const AnalyticsDashboard: React.FC = () => {
   const [analyticsData, setAnalyticsData] = useState<any>(null);
@@ -29,107 +42,143 @@ export const AnalyticsDashboard: React.FC = () => {
   return (
     <div className="space-y-8">
       
-      {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between bg-slate-900 border border-emerald-900/40 p-6 rounded-2xl shadow-xl gap-4">
+      {/* Royal Park Director Banner */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between bg-gradient-to-r from-purple-950 via-[#181335] to-indigo-950 border-2 border-purple-600/40 p-6 sm:p-7 rounded-3xl shadow-2xl gap-4">
         <div>
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-xs font-semibold uppercase tracking-wider mb-2">
-            <Database className="w-3.5 h-3.5" />
-            Relational SQL Views & Business Intelligence
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gradient-to-r from-amber-500/20 to-purple-500/20 text-amber-300 border border-amber-500/30 text-xs font-black uppercase tracking-wider mb-2">
+            <Crown className="w-4 h-4 text-amber-400" />
+            <span>Kingdom Command & Park Director Hub</span>
           </div>
-          <h2 className="text-2xl font-extrabold text-white tracking-tight">Park Operations & Revenue Intelligence</h2>
-          <p className="text-xs text-slate-400 mt-1">
-            Data sourced directly from PostgreSQL Views: <span className="font-mono text-emerald-400">v_daily_revenue_analytics</span>, <span className="font-mono text-emerald-400">v_zone_crowd_density</span>, and <span className="font-mono text-emerald-400">v_visitor_expenditure_analytics</span>.
+          <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
+            Theme Park Business Intelligence & Live SQL Views
+          </h2>
+          <p className="text-xs sm:text-sm text-purple-200 mt-1 max-w-2xl">
+            Real-time analytics materialized from PostgreSQL Views: <span className="font-mono text-amber-300 font-bold">v_daily_revenue_analytics</span>, <span className="font-mono text-cyan-300 font-bold">v_zone_crowd_density</span>, and <span className="font-mono text-rose-300 font-bold">v_visitor_expenditure_analytics</span>.
           </p>
         </div>
+
         <button
           onClick={fetchAnalytics}
-          className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs border border-slate-700 flex items-center gap-2"
+          className="px-5 py-2.5 rounded-2xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-black text-xs flex items-center gap-2 shadow-xl shadow-purple-600/20 transition-all hover:scale-105 active:scale-95 shrink-0"
         >
           <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
-          Refresh Views
+          <span>Refresh SQL Views</span>
         </button>
       </div>
 
-      {/* KPI Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg flex items-center gap-4">
-          <div className="w-12 h-12 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center border border-emerald-500/30">
-            <DollarSign className="w-6 h-6" />
+      {/* Playful KPI Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        
+        {/* Revenue */}
+        <div className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-[#161d2f] to-emerald-950/40 border-2 border-emerald-500/40 rounded-3xl p-5 shadow-xl">
+          <div className="flex items-center justify-between mb-3">
+            <div className="w-12 h-12 rounded-2xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-2xl">
+              💰
+            </div>
+            <span className="text-[10px] font-black uppercase px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+              Live SQL View
+            </span>
           </div>
-          <div>
-            <div className="text-xs text-slate-400 font-semibold">Today's Park Revenue</div>
-            <div className="text-xl font-black text-white">$13,818.21</div>
-            <div className="text-[11px] text-emerald-400 font-medium">From v_daily_revenue_analytics</div>
-          </div>
-        </div>
-
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg flex items-center gap-4">
-          <div className="w-12 h-12 rounded-xl bg-indigo-500/20 text-indigo-400 flex items-center justify-center border border-indigo-500/30">
-            <Users className="w-6 h-6" />
-          </div>
-          <div>
-            <div className="text-xs text-slate-400 font-semibold">Active In-Park Visitors</div>
-            <div className="text-xl font-black text-white">6,790 / 12,000</div>
-            <div className="text-[11px] text-indigo-400 font-medium">56.5% Capacity Utilization</div>
+          <div className="text-xs text-purple-200 font-extrabold">Today's Park Revenue</div>
+          <div className="text-2xl sm:text-3xl font-black text-white mt-0.5 tracking-tight">$13,818.21</div>
+          <div className="text-[11px] text-emerald-400 font-bold mt-1.5 flex items-center gap-1">
+            <TrendingUp className="w-3.5 h-3.5" /> +18.4% vs Last Weekend
           </div>
         </div>
 
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg flex items-center gap-4">
-          <div className="w-12 h-12 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center border border-amber-500/30">
-            <Layers className="w-6 h-6" />
+        {/* Guest Count */}
+        <div className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-[#18152e] to-cyan-950/40 border-2 border-cyan-500/40 rounded-3xl p-5 shadow-xl">
+          <div className="flex items-center justify-between mb-3">
+            <div className="w-12 h-12 rounded-2xl bg-cyan-500/20 text-cyan-400 flex items-center justify-center text-2xl">
+              👨‍👩‍👧‍👦
+            </div>
+            <span className="text-[10px] font-black uppercase px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
+              In Park
+            </span>
           </div>
-          <div>
-            <div className="text-xs text-slate-400 font-semibold">Operational Attractions</div>
-            <div className="text-xl font-black text-white">7 / 8 Rides</div>
-            <div className="text-[11px] text-amber-400 font-medium">1 In Maintenance</div>
+          <div className="text-xs text-purple-200 font-extrabold">Active Theme Park Guests</div>
+          <div className="text-2xl sm:text-3xl font-black text-white mt-0.5 tracking-tight">6,790 / 12,000</div>
+          <div className="text-[11px] text-cyan-300 font-bold mt-1.5 flex items-center gap-1">
+            <span>🎡</span> 56.5% Capacity Utilization
           </div>
         </div>
 
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg flex items-center gap-4">
-          <div className="w-12 h-12 rounded-xl bg-purple-500/20 text-purple-400 flex items-center justify-center border border-purple-500/30">
-            <Award className="w-6 h-6" />
+        {/* Ride Uptime */}
+        <div className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-[#1d1624] to-amber-950/40 border-2 border-amber-500/40 rounded-3xl p-5 shadow-xl">
+          <div className="flex items-center justify-between mb-3">
+            <div className="w-12 h-12 rounded-2xl bg-amber-500/20 text-amber-400 flex items-center justify-center text-2xl">
+              🎢
+            </div>
+            <span className="text-[10px] font-black uppercase px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30">
+              Safety High
+            </span>
           </div>
-          <div>
-            <div className="text-xs text-slate-400 font-semibold">FastPass Adoption</div>
-            <div className="text-xl font-black text-white">28.4%</div>
-            <div className="text-[11px] text-purple-400 font-medium">Expedited Lane Usage</div>
+          <div className="text-xs text-purple-200 font-extrabold">Operational Attractions</div>
+          <div className="text-2xl sm:text-3xl font-black text-white mt-0.5 tracking-tight">7 / 8 Rides</div>
+          <div className="text-[11px] text-amber-300 font-bold mt-1.5 flex items-center gap-1">
+            <span>🛠️</span> 1 Pit Stop Maintenance
           </div>
         </div>
+
+        {/* FastPass Adoption */}
+        <div className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-[#1b122f] to-purple-950/40 border-2 border-purple-500/40 rounded-3xl p-5 shadow-xl">
+          <div className="flex items-center justify-between mb-3">
+            <div className="w-12 h-12 rounded-2xl bg-purple-500/20 text-purple-400 flex items-center justify-center text-2xl">
+              ⚡
+            </div>
+            <span className="text-[10px] font-black uppercase px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/30">
+              FastPass
+            </span>
+          </div>
+          <div className="text-xs text-purple-200 font-extrabold">Express Queue Adoption</div>
+          <div className="text-2xl sm:text-3xl font-black text-white mt-0.5 tracking-tight">28.4%</div>
+          <div className="text-[11px] text-purple-300 font-bold mt-1.5 flex items-center gap-1">
+            <Sparkles className="w-3.5 h-3.5 text-amber-300" /> High Guest Satisfaction
+          </div>
+        </div>
+
       </div>
 
       {/* SQL View 1: v_daily_revenue_analytics Table */}
-      <section className="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-4">
-        <div className="flex items-center justify-between">
+      <section className="bg-gradient-to-br from-slate-900 via-[#13162a] to-purple-950/60 border-2 border-purple-800/40 rounded-3xl p-6 sm:p-7 shadow-2xl space-y-4">
+        <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <h3 className="font-extrabold text-white text-base">SQL View: v_daily_revenue_analytics</h3>
-            <p className="text-xs text-slate-400">Grouped by ticket tier with SUM(revenue) and COUNT(tickets)</p>
+            <div className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-[11px] font-black uppercase tracking-wider mb-1">
+              <span>📊</span> Financial View
+            </div>
+            <h3 className="font-black text-white text-lg">Daily Revenue Breakdown by Pass Tier</h3>
+            <p className="text-xs text-purple-300">Materialized from SQL View <span className="font-mono text-emerald-400">v_daily_revenue_analytics</span></p>
           </div>
-          <span className="text-[11px] font-mono bg-emerald-950 text-emerald-300 px-2.5 py-1 rounded border border-emerald-800">
-            PostgreSQL VIEW
+          
+          <span className="text-xs font-mono font-bold bg-emerald-950 text-emerald-300 px-3 py-1 rounded-xl border border-emerald-700">
+            PostgreSQL Relational VIEW
           </span>
         </div>
 
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto rounded-2xl border border-purple-900/60">
           <table className="w-full text-left text-xs">
-            <thead className="bg-slate-950 text-slate-400 uppercase text-[10px] font-bold border-b border-slate-800">
+            <thead className="bg-slate-950 text-purple-300 uppercase text-[10px] font-black border-b border-purple-900/60">
               <tr>
                 <th className="py-3 px-4">Date</th>
                 <th className="py-3 px-4">Admission Tier</th>
                 <th className="py-3 px-4 text-right">Tickets Sold</th>
                 <th className="py-3 px-4 text-right">Tier Revenue</th>
-                <th className="py-3 px-4 text-right">Avg Transaction</th>
+                <th className="py-3 px-4 text-right">Avg Order Value</th>
                 <th className="py-3 px-4 text-right">Unique Bookings</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-800/60 font-mono text-slate-300">
+            <tbody className="divide-y divide-purple-900/40 font-mono text-purple-200 bg-slate-950/60">
               {views.dailyRevenue?.map((row: any, i: number) => (
-                <tr key={i} className="hover:bg-slate-800/40">
-                  <td className="py-2.5 px-4 text-slate-400">{row.booking_date?.split('T')[0] || row.booking_date}</td>
-                  <td className="py-2.5 px-4 font-bold text-white font-sans">{row.tier_name}</td>
-                  <td className="py-2.5 px-4 text-right text-indigo-300 font-bold">{row.total_tickets_sold}</td>
-                  <td className="py-2.5 px-4 text-right text-emerald-400 font-bold">${Number(row.tier_revenue).toFixed(2)}</td>
-                  <td className="py-2.5 px-4 text-right text-slate-300">${Number(row.avg_booking_value).toFixed(2)}</td>
-                  <td className="py-2.5 px-4 text-right text-amber-300">{row.unique_transactions}</td>
+                <tr key={i} className="hover:bg-purple-950/30 transition-colors">
+                  <td className="py-3 px-4 text-purple-400">{row.booking_date?.split('T')[0] || row.booking_date}</td>
+                  <td className="py-3 px-4 font-black text-white font-sans text-xs flex items-center gap-2">
+                    <span>🎟️</span>
+                    <span>{row.tier_name}</span>
+                  </td>
+                  <td className="py-3 px-4 text-right text-cyan-300 font-bold">{row.total_tickets_sold}</td>
+                  <td className="py-3 px-4 text-right text-emerald-400 font-black text-sm">${Number(row.tier_revenue).toFixed(2)}</td>
+                  <td className="py-3 px-4 text-right text-purple-300">${Number(row.avg_booking_value).toFixed(2)}</td>
+                  <td className="py-3 px-4 text-right text-amber-300 font-bold">{row.unique_transactions}</td>
                 </tr>
               ))}
             </tbody>
@@ -141,11 +190,14 @@ export const AnalyticsDashboard: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         
         {/* SQL View 2: v_zone_crowd_density */}
-        <section className="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-4">
+        <section className="bg-gradient-to-br from-slate-900 via-[#13162a] to-purple-950/60 border-2 border-purple-800/40 rounded-3xl p-6 sm:p-7 shadow-2xl space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="font-extrabold text-white text-base">SQL View: v_zone_crowd_density</h3>
-              <p className="text-xs text-slate-400">Live capacity utilization with dynamic condition threshold</p>
+              <div className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 text-[11px] font-black uppercase tracking-wider mb-1">
+                <span>🎡</span> Crowd Thermometer
+              </div>
+              <h3 className="font-black text-white text-lg">Realm Crowd Density & Capacities</h3>
+              <p className="text-xs text-purple-300">Live utilization from <span className="font-mono text-cyan-400">v_zone_crowd_density</span></p>
             </div>
           </div>
 
@@ -154,27 +206,31 @@ export const AnalyticsDashboard: React.FC = () => {
               const pct = Number(zone.occupancy_percentage || 50);
               const isHigh = pct >= 70;
               return (
-                <div key={zone.zone_id} className="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
+                <div key={zone.zone_id} className="bg-slate-950/80 p-4 rounded-2xl border border-purple-900/60 space-y-2.5">
                   <div className="flex items-center justify-between">
                     <div>
-                      <div className="text-xs font-extrabold text-white">{zone.zone_name}</div>
-                      <div className="text-[11px] text-slate-400">{zone.theme}</div>
+                      <div className="text-sm font-black text-white">{zone.zone_name}</div>
+                      <div className="text-[11px] text-purple-300">{zone.theme}</div>
                     </div>
-                    <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
-                      isHigh ? 'bg-amber-950 text-amber-300 border border-amber-800' : 'bg-emerald-950 text-emerald-300 border border-emerald-800'
+                    <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-black ${
+                      isHigh ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40' : 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'
                     }`}>
                       {zone.crowd_status}
                     </span>
                   </div>
 
-                  <div className="space-y-1">
-                    <div className="flex items-center justify-between text-[11px] text-slate-400">
-                      <span>Occupancy: {zone.current_occupancy} / {zone.max_capacity}</span>
-                      <span className="font-bold text-white">{pct}%</span>
+                  <div className="space-y-1.5">
+                    <div className="flex items-center justify-between text-xs text-purple-200">
+                      <span>Occupancy: {zone.current_occupancy} / {zone.max_capacity} guests</span>
+                      <span className="font-black text-amber-300">{pct}%</span>
                     </div>
-                    <div className="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+                    <div className="w-full bg-slate-900 h-2.5 rounded-full overflow-hidden border border-purple-900">
                       <div
-                        className={`h-full rounded-full transition-all ${isHigh ? 'bg-amber-500' : 'bg-emerald-500'}`}
+                        className={`h-full rounded-full transition-all duration-500 ${
+                          isHigh 
+                            ? 'bg-gradient-to-r from-amber-500 to-rose-500' 
+                            : 'bg-gradient-to-r from-teal-400 to-emerald-500'
+                        }`}
                         style={{ width: `${Math.min(100, pct)}%` }}
                       ></div>
                     </div>
@@ -186,34 +242,40 @@ export const AnalyticsDashboard: React.FC = () => {
         </section>
 
         {/* SQL View 3: v_visitor_expenditure_analytics */}
-        <section className="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-4">
+        <section className="bg-gradient-to-br from-slate-900 via-[#13162a] to-purple-950/60 border-2 border-purple-800/40 rounded-3xl p-6 sm:p-7 shadow-2xl space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="font-extrabold text-white text-base">SQL View: v_visitor_expenditure_analytics</h3>
-              <p className="text-xs text-slate-400">VIP guest lifetime spending & ticket purchase volume</p>
+              <div className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30 text-[11px] font-black uppercase tracking-wider mb-1">
+                <span>👑</span> VIP Leaderboard
+              </div>
+              <h3 className="font-black text-white text-lg">Top Guests & Lifetime Spending</h3>
+              <p className="text-xs text-purple-300">Queried from <span className="font-mono text-amber-300">v_visitor_expenditure_analytics</span></p>
             </div>
           </div>
 
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto rounded-2xl border border-purple-900/60">
             <table className="w-full text-left text-xs">
-              <thead className="bg-slate-950 text-slate-400 uppercase text-[10px] font-bold border-b border-slate-800">
+              <thead className="bg-slate-950 text-purple-300 uppercase text-[10px] font-black border-b border-purple-900/60">
                 <tr>
-                  <th className="py-2.5 px-3">Visitor Name</th>
-                  <th className="py-2.5 px-3 text-right">Bookings</th>
-                  <th className="py-2.5 px-3 text-right">Tickets</th>
-                  <th className="py-2.5 px-3 text-right">Lifetime Spent</th>
+                  <th className="py-3 px-3">Guest Name</th>
+                  <th className="py-3 px-3 text-right">Orders</th>
+                  <th className="py-3 px-3 text-right">Passes</th>
+                  <th className="py-3 px-3 text-right">Lifetime Spent</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-800/60 font-mono text-slate-300">
-                {views.visitorExpenditure?.map((v: any) => (
-                  <tr key={v.user_id} className="hover:bg-slate-800/40">
-                    <td className="py-2.5 px-3 font-sans">
-                      <div className="font-bold text-white">{v.full_name}</div>
-                      <div className="text-[10px] text-slate-500 font-mono">{v.email}</div>
+              <tbody className="divide-y divide-purple-900/40 font-mono text-purple-200 bg-slate-950/60">
+                {views.visitorExpenditure?.map((v: any, index: number) => (
+                  <tr key={v.user_id} className="hover:bg-purple-950/30 transition-colors">
+                    <td className="py-3 px-3 font-sans">
+                      <div className="font-black text-white flex items-center gap-1.5">
+                        <span>{index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : '🎟️'}</span>
+                        <span>{v.full_name}</span>
+                      </div>
+                      <div className="text-[10px] text-purple-400 font-mono">{v.email}</div>
                     </td>
-                    <td className="py-2.5 px-3 text-right text-indigo-300">{v.total_bookings_count}</td>
-                    <td className="py-2.5 px-3 text-right text-amber-300">{v.total_tickets_purchased}</td>
-                    <td className="py-2.5 px-3 text-right font-bold text-emerald-400">
+                    <td className="py-3 px-3 text-right text-cyan-300 font-bold">{v.total_bookings_count}</td>
+                    <td className="py-3 px-3 text-right text-amber-300 font-bold">{v.total_tickets_purchased}</td>
+                    <td className="py-3 px-3 text-right font-black text-emerald-400 text-sm">
                       ${Number(v.total_lifetime_spent).toFixed(2)}
                     </td>
                   </tr>
