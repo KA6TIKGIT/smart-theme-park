@@ -40,6 +40,9 @@ export const OperatorOperations: React.FC<OperatorOperationsProps> = ({
   const [simulatingScan, setSimulatingScan] = useState(false);
   const [scanStatusMsg, setScanStatusMsg] = useState<string | null>(null);
 
+  const [simulatingRideTelemetry, setSimulatingRideTelemetry] = useState(false);
+  const [rideTelemetryMsg, setRideTelemetryMsg] = useState<string | null>(null);
+
   // Maintenance Incident Form
   const [incidentAttrId, setIncidentAttrId] = useState(4);
   const [incidentSeverity, setIncidentSeverity] = useState('MEDIUM');
@@ -91,7 +94,7 @@ export const OperatorOperations: React.FC<OperatorOperationsProps> = ({
       });
       const json = await res.json();
       if (json.success) {
-        setScanStatusMsg(`🎟️ Tap Ingested! MongoDB NoSQL event logged & trigger evaluated: ${json.message}`);
+        setScanStatusMsg(`🎟️ Tap ingested: ${json.message}`);
         fetchTelemetry();
         if (onRefreshAll) onRefreshAll();
       }
@@ -99,6 +102,39 @@ export const OperatorOperations: React.FC<OperatorOperationsProps> = ({
       setScanStatusMsg(`Error: ${err.message}`);
     } finally {
       setSimulatingScan(false);
+    }
+  };
+
+  const handleSimulateRideTelemetry = async () => {
+    setSimulatingRideTelemetry(true);
+    setRideTelemetryMsg(null);
+
+    const sample = {
+      attractionId: 1,
+      rideName: 'Apex Predator: Hyper Coaster',
+      gForceMax: Number((3.8 + Math.random() * 0.8).toFixed(1)),
+      motorTempCelsius: Number((68 + Math.random() * 10).toFixed(1)),
+      trackVibrationMmS: Number((1.5 + Math.random() * 1.2).toFixed(1)),
+      safetyHarnessLocked: true,
+      speedKmh: Number((112 + Math.random() * 12).toFixed(1)),
+      dispatchCycleSec: Math.round(80 + Math.random() * 12),
+    };
+
+    try {
+      const res = await fetch('/api/telemetry', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ type: 'RIDE_TELEMETRY', payload: sample }),
+      });
+      const json = await res.json();
+      if (!json.success) throw new Error(json.error || 'Unable to record telemetry');
+
+      setRideTelemetryMsg(`New sample recorded: ${sample.motorTempCelsius}°C motor temperature, ${sample.gForceMax} G peak.`);
+      await fetchTelemetry();
+    } catch (err: any) {
+      setRideTelemetryMsg(`Could not record telemetry: ${err.message}`);
+    } finally {
+      setSimulatingRideTelemetry(false);
     }
   };
 
@@ -364,6 +400,25 @@ export const OperatorOperations: React.FC<OperatorOperationsProps> = ({
             {telemetryData?.source || 'NoSQL Telemetry Cluster Active'}
           </span>
         </div>
+
+        <div className="flex flex-wrap items-center justify-between gap-3 border-y border-slate-200 py-3">
+          <p className="text-xs text-slate-600">Create a sensor reading and refresh the aggregated ride-health data.</p>
+          <button
+            type="button"
+            onClick={handleSimulateRideTelemetry}
+            disabled={simulatingRideTelemetry}
+            className="px-4 py-2 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold text-xs flex items-center gap-2"
+          >
+            {simulatingRideTelemetry ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <Activity className="w-3.5 h-3.5" />}
+            {simulatingRideTelemetry ? 'Recording sample…' : 'Simulate ride sensor sample'}
+          </button>
+        </div>
+
+        {rideTelemetryMsg && (
+          <p className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-xs text-slate-700">
+            {rideTelemetryMsg}
+          </p>
+        )}
 
         {telemetryData?.aggregations?.rideHealthStats && (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">

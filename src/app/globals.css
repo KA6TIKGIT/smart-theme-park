@@ -2,16 +2,79 @@
 @tailwind components;
 @tailwind utilities;
 
-:root { color-scheme: dark; }
+:root {
+  color-scheme: light;
+  --ink: #20332d;
+  --muted: #62726b;
+  --canvas: #f5f4ee;
+  --surface: #fffdf8;
+  --line: #d7ddd5;
+  --evergreen: #236052;
+  --evergreen-dark: #184a3e;
+  --sage: #e5eee7;
+  --gold: #8c681f;
+}
 
 body {
   margin: 0;
-  background: #020617;
+  background: var(--canvas);
+  color: var(--ink);
   font-family: var(--font-geist-sans), system-ui, sans-serif;
 }
 
-/* Keep existing workflows, but present them as a restrained product UI. */
-.app-shell [class*="bg-gradient"] { background: #111827 !important; }
+/* A restrained park palette applied to the existing workflow components. */
+.app-shell [class*="bg-gradient"],
+.app-shell [class*="bg-slate-"],
+.app-shell [class*="bg-purple-"] { background: var(--surface) !important; }
+
+.app-shell [class*="bg-amber-"],
+.app-shell [class*="bg-yellow-"] { background: #f8efd7 !important; }
+
+.app-shell [class*="bg-emerald-"],
+.app-shell [class*="bg-teal-"],
+.app-shell [class*="bg-cyan-"] { background: var(--sage) !important; }
+
+.app-shell [class*="bg-rose-"] { background: #f7e8e4 !important; }
+
+.app-shell [class*="border-"] { border-color: var(--line) !important; }
+
+.app-shell [class*="text-white"],
+.app-shell [class~="text-slate-950"],
+.app-shell [class~="text-slate-900"] { color: var(--ink) !important; }
+.app-shell [class*="text-slate"],
+.app-shell [class*="text-purple"] { color: var(--muted) !important; }
+.app-shell [class*="text-amber"],
+.app-shell [class*="text-yellow"] { color: var(--gold) !important; }
+.app-shell [class*="text-emerald"],
+.app-shell [class*="text-teal"],
+.app-shell [class*="text-cyan"] { color: var(--evergreen) !important; }
+.app-shell [class*="text-rose"] { color: #a14d43 !important; }
+
+/* Actions stay immediately recognizable and readable. */
+.app-shell button[class*="bg-"],
+.app-shell button[class*="bg-gradient"] {
+  background: var(--evergreen) !important;
+  border-color: var(--evergreen) !important;
+  color: #ffffff !important;
+}
+
+.app-shell button[class*="bg-"] *,
+.app-shell button[class*="bg-gradient"] * { color: inherit !important; }
+.app-shell button:hover:not(:disabled) { background: var(--evergreen-dark) !important; }
+.app-shell button:disabled {
+  background: #e5e8e1 !important;
+  border-color: #e5e8e1 !important;
+  color: #7a857e !important;
+}
+
+.app-shell input,
+.app-shell select,
+.app-shell textarea {
+  background: #ffffff !important;
+  border-color: #bfcac0 !important;
+  color: var(--ink) !important;
+}
+
 .app-shell [class*="shadow"] { box-shadow: none !important; }
 .app-shell [class*="rounded-3xl"] { border-radius: 0.75rem !important; }
 .app-shell [class*="rounded-2xl"] { border-radius: 0.5rem !important; }

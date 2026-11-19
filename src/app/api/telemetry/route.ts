@@ -1,11 +1,15 @@
 import { NextResponse } from 'next/server';
-import { getMongoDb, mockTurnstileEvents, mockRideTelemetry, mockFeedback } from '@/lib/db/mongo';
+import { getMongoDb, Int32, mockTurnstileEvents, mockRideTelemetry, seedTelemetryIfEmpty } from '@/lib/db/mongo';
 
 export async function GET() {
   try {
     const { db, isMock } = await getMongoDb();
 
     if (!isMock && db) {
+      // A fresh Docker MongoDB instance has no documents until the separate setup
+      // script is run. Seed only the ride samples needed by the dashboard.
+      await seedTelemetryIfEmpty(db);
+
       // 1. Live Aggregation Pipeline: Zone Hourly Scan Distribution
       const turnstileAgg = await db.collection('iot_turnstile_events').aggregate([
         {
@@ -98,6 +102,8 @@ export async function POST(request: Request) {
       if (type === 'TURNSTILE_SCAN') {
         const doc = {
           ...payload,
+          zoneId: new Int32(payload.zoneId),
+          attractionId: new Int32(payload.attractionId),
           timestamp: new Date()
         };
         await db.collection('iot_turnstile_events').insertOne(doc);
@@ -107,6 +113,8 @@ export async function POST(request: Request) {
       if (type === 'RIDE_TELEMETRY') {
         const doc = {
           ...payload,
+          attractionId: new Int32(payload.attractionId),
+          dispatchCycleSec: new Int32(payload.dispatchCycleSec),
           timestamp: new Date()
         };
         await db.collection('ride_telemetry').insertOne(doc);
@@ -127,6 +135,22 @@ export async function POST(request: Request) {
       };
       mockTurnstileEvents.unshift(doc);
       return NextResponse.json({ success: true, message: 'Turnstile event added (Mock Stream)', doc });
+    }
+
+    if (type === 'RIDE_TELEMETRY') {
+      const doc = {
+        attractionId: payload.attractionId || 1,
+        rideName: payload.rideName || 'Apex Predator: Hyper Coaster',
+        gForceMax: payload.gForceMax ?? 3.8,
+        motorTempCelsius: payload.motorTempCelsius ?? 70,
+        trackVibrationMmS: payload.trackVibrationMmS ?? 1.5,
+        safetyHarnessLocked: payload.safetyHarnessLocked ?? true,
+        speedKmh: payload.speedKmh ?? 80,
+        dispatchCycleSec: payload.dispatchCycleSec ?? 90,
+        timestamp: new Date(),
+      };
+      mockRideTelemetry.unshift(doc);
+      return NextResponse.json({ success: true, message: 'Ride sensor sample added (Mock Stream)', doc });
     }
 
     return NextResponse.json({ success: true, message: 'Telemetry received (Mock Stream)' });

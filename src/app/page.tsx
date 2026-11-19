@@ -18,13 +18,13 @@ export default function Home() {
   };
 
   return (
-    <div className="app-shell min-h-screen bg-slate-950 text-slate-100">
+    <div className="app-shell min-h-screen bg-slate-50 text-slate-900">
       <Navbar currentRole={currentRole} onSelectRole={handleSelectRole} />
 
       <main className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6">
-        <div className="mb-8 border-b border-slate-800 pb-6">
-          <p className="text-sm text-slate-400">Signed in as {DEMO_USERS[currentRole].fullName}</p>
-          <h1 className="mt-1 text-2xl font-semibold text-white">
+        <div className="mb-8 border-b border-slate-200 pb-6">
+          <p className="text-sm text-slate-600">Signed in as {DEMO_USERS[currentRole].fullName}</p>
+          <h1 className="mt-1 text-2xl font-semibold text-slate-950">
             {currentRole === 'VISITOR' && 'Plan your park day'}
             {currentRole === 'OPERATOR' && 'Operations'}
             {currentRole === 'ADMIN' && 'Park overview'}
@@ -47,7 +47,7 @@ export default function Home() {
         )}
       </main>
 
-      <footer className="border-t border-slate-800 px-4 py-5 text-center text-xs text-slate-500">
+      <footer className="border-t border-slate-200 px-4 py-5 text-center text-xs text-slate-500">
         Aetheria Theme Park
       </footer>
     </div>

@@ -1,10 +1,12 @@
-import { MongoClient, Db } from 'mongodb';
+import { MongoClient, Db, Int32 } from 'mongodb';
 
 const uri = process.env.MONGODB_URI || 'mongodb://localhost:27017';
 const dbName = process.env.MONGODB_DB || 'smart_theme_park';
 
 let client: MongoClient | null = null;
 let isMongoAvailable: boolean | null = null;
+let lastMongoAttemptAt = 0;
+const MONGO_RETRY_INTERVAL_MS = 10_000;
 
 // Realistic mock document collections for immediate preview
 const mockTurnstileEvents = [
@@ -22,6 +24,11 @@ const mockRideTelemetry = [
   { attractionId: 3, rideName: 'Raptor Encounter River Safari', gForceMax: 1.5, motorTempCelsius: 52.1, trackVibrationMmS: 1.1, safetyHarnessLocked: true, speedKmh: 24.0, dispatchCycleSec: 180, timestamp: new Date() },
 ];
 
+const rideTelemetrySeed = mockRideTelemetry.map((event) => ({
+  ...event,
+  timestamp: new Date(event.timestamp),
+}));
+
 const mockFeedback = [
   { attractionId: 1, visitorName: 'Alex Johnson', rating: 5, reviewText: 'Unreal adrenaline drop! Inversion was insane. Minimal wait with FastPass.', sentiment: 'POSITIVE', tags: ['adrenaline', 'smooth', 'fastpass'], submittedAt: new Date(Date.now() - 2 * 3600000) },
   { attractionId: 2, visitorName: 'Priya Sharma', rating: 5, reviewText: 'The 4D digital projection and motion sync felt like actual virtual reality.', sentiment: 'POSITIVE', tags: ['scifi', 'interactive', 'family'], submittedAt: new Date(Date.now() - 1 * 3600000) },
@@ -29,12 +36,15 @@ const mockFeedback = [
 ];
 
 export async function getMongoDb(): Promise<{ db: Db | null; isMock: boolean }> {
-  if (isMongoAvailable === false) {
+  // Mongo may come online after the Next.js server has already started. Avoid
+  // permanently caching the first failed connection, while not retrying on every request.
+  if (isMongoAvailable === false && Date.now() - lastMongoAttemptAt < MONGO_RETRY_INTERVAL_MS) {
     return { db: null, isMock: true };
   }
 
   try {
     if (!client) {
+      lastMongoAttemptAt = Date.now();
       client = new MongoClient(uri, { serverSelectionTimeoutMS: 2000 });
       await client.connect();
       isMongoAvailable = true;
@@ -42,10 +52,23 @@ export async function getMongoDb(): Promise<{ db: Db | null; isMock: boolean }> 
     }
     return { db: client.db(dbName), isMock: false };
   } catch (err: any) {
+    client = null;
     isMongoAvailable = false;
     console.warn('⚠️ MongoDB offline. Using high-fidelity NoSQL mock telemetry & aggregation pipeline.');
     return { db: null, isMock: true };
   }
 }
 
-export { mockTurnstileEvents, mockRideTelemetry, mockFeedback };
+export async function seedTelemetryIfEmpty(db: Db): Promise<void> {
+  const telemetry = db.collection('ride_telemetry');
+  if (await telemetry.estimatedDocumentCount() > 0) return;
+
+  await telemetry.insertMany(rideTelemetrySeed.map((event) => ({
+    ...event,
+    attractionId: new Int32(event.attractionId),
+    dispatchCycleSec: new Int32(event.dispatchCycleSec),
+    timestamp: new Date(),
+  })));
+}
+
+export { Int32, mockTurnstileEvents, mockRideTelemetry, mockFeedback };
